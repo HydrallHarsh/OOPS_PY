@@ -1,0 +1,43 @@
+name: Apply OOP guide button
+
+on:
+  push:
+    branches:
+      - feat/oop-internals-guide
+
+permissions:
+  contents: write
+
+jobs:
+  apply-change:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+
+      - name: Add guide button to quiz
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path("python_oops_quiz.html")
+          text = path.read_text(encoding="utf-8")
+          old = '<div class="start-row"><button class="primary-button" id="startButton">Start quiz</button><span class="subtle-note" id="selectedSectionNote">OOP Concepts selected</span></div>'
+          new = '<div class="start-row"><button class="primary-button" id="startButton">Start quiz</button><a class="ghost-button" href="oop_internals_guide.html">OOP Internals Guide</a><span class="subtle-note" id="selectedSectionNote">OOP Concepts selected</span></div>'
+
+          if "oop_internals_guide.html" in text:
+              raise SystemExit("OOP Internals Guide button is already present")
+          if old not in text:
+              raise SystemExit("Expected quiz start row was not found")
+
+          path.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+      - name: Commit change and remove temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add python_oops_quiz.html
+          git commit -m "Add OOP internals guide button"
+          git rm .github/workflows/apply-oop-guide-button.yml
+          git commit -m "Remove temporary guide button workflow"
+          git push origin HEAD:feat/oop-internals-guide
