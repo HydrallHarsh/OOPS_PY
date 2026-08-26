@@ -3,34 +3,52 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Python OOP Internals Guide</title>
+<title>Python OOP Internals — Detailed Guide</title>
 <style>
-:root{--ink:#17212b;--muted:#65717d;--paper:#f7f8f5;--surface:#fff;--line:#dfe5e8;--navy:#17324d;--teal:#0f766e;--teal-soft:#e5f4f1;--amber:#b45309;--amber-soft:#fff4df;--purple:#6b4fa1;--code:#17212b;--shadow:0 14px 38px rgba(23,33,43,.09)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:#eef4f4;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}.shell{width:min(1180px,calc(100% - 28px));margin:auto;padding:24px 0 60px}.top{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:22px}.brand{display:flex;gap:12px;align-items:center}.mark{width:44px;height:44px;display:grid;place-items:center;border-radius:12px;background:var(--navy);color:#fff;font-weight:900}.eyebrow{margin:0;color:var(--teal);font-size:.73rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.top h1{margin:0;font-size:clamp(1.5rem,3vw,2.2rem);letter-spacing:-.04em}.home{color:var(--navy);background:#fff;border:1px solid var(--line);border-radius:8px;padding:9px 13px;font-weight:800;text-decoration:none}.hero,.section{background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}.hero{padding:clamp(24px,5vw,52px);margin-bottom:20px}.hero h2{font-size:clamp(2rem,5vw,4rem);line-height:1;letter-spacing:-.06em;margin:8px 0 18px;max-width:900px}.hero p{max-width:850px;color:var(--muted);font-size:1.05rem}.layout{display:grid;grid-template-columns:245px minmax(0,1fr);gap:20px;align-items:start}.toc{position:sticky;top:15px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px}.toc strong{display:block;margin-bottom:9px}.toc a{display:block;padding:6px 7px;color:var(--muted);text-decoration:none;border-radius:6px;font-size:.88rem}.toc a:hover{color:var(--teal);background:var(--teal-soft)}.content{display:grid;gap:18px}.section{padding:clamp(20px,4vw,34px);scroll-margin-top:18px}.section h2{margin:0 0 12px;font-size:clamp(1.5rem,3vw,2.15rem);letter-spacing:-.035em}.section h3{margin:26px 0 8px;font-size:1.15rem}.section h4{margin:20px 0 6px}.section p{margin:8px 0}.callout{padding:14px 16px;border-left:4px solid var(--teal);background:var(--teal-soft);border-radius:7px;margin:14px 0}.warning{border-left-color:var(--amber);background:var(--amber-soft)}.purple{border-left-color:var(--purple);background:#f3effa}.code{overflow:auto;background:var(--code);color:#e9f4f2;padding:16px 18px;border-radius:9px;font: .88rem/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre;margin:12px 0 16px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{border:1px solid var(--line);border-radius:9px;padding:15px;background:#fbfcfc}.card h4{margin:0 0 5px;color:var(--navy)}.card p{font-size:.93rem;color:var(--muted)}table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.92rem}th,td{border:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}th{background:#f1f5f5;color:var(--navy)}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#edf1f2;padding:1px 4px;border-radius:4px;font-size:.9em}.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.step{padding:12px;border:1px solid var(--line);border-radius:8px;background:#fbfcfc;text-align:center;font-weight:750}.small{color:var(--muted);font-size:.9rem}.method-list{columns:2;column-gap:28px}.method-list li{break-inside:avoid;margin:5px 0}.back{display:inline-block;margin-top:14px;color:var(--teal);font-weight:800;text-decoration:none}@media(max-width:820px){.layout{grid-template-columns:1fr}.toc{position:static}.grid{grid-template-columns:1fr}.flow{grid-template-columns:1fr 1fr}.method-list{columns:1}.top{align-items:flex-start}}@media(max-width:480px){.shell{width:min(100% - 16px,680px)}.flow{grid-template-columns:1fr}.section{padding:20px 16px}.hero{padding:24px 18px}.top h1{font-size:1.45rem}}
+:root{--ink:#17212b;--muted:#65717d;--bg:#eef4f4;--surface:#fff;--line:#dfe5e8;--navy:#17324d;--teal:#0f766e;--teal-soft:#e5f4f1;--amber:#b45309;--amber-soft:#fff4df;--purple:#6b4fa1;--purple-soft:#f3effa;--red:#b42318;--code:#17212b;--shadow:0 14px 38px rgba(23,33,43,.09)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--bg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.7}.shell{width:min(1180px,calc(100% - 28px));margin:auto;padding:24px 0 70px}.top{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:22px}.brand{display:flex;gap:12px;align-items:center}.mark{width:44px;height:44px;display:grid;place-items:center;border-radius:12px;background:var(--navy);color:#fff;font-weight:900}.eyebrow{margin:0;color:var(--teal);font-size:.73rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.top h1{margin:0;font-size:clamp(1.45rem,3vw,2.2rem);letter-spacing:-.04em}.home{color:var(--navy);background:#fff;border:1px solid var(--line);border-radius:8px;padding:9px 13px;font-weight:800;text-decoration:none}.hero,.section,.toc{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}.hero{padding:clamp(24px,5vw,52px);margin-bottom:20px}.hero h2{font-size:clamp(2rem,5vw,4rem);line-height:1;letter-spacing:-.06em;margin:8px 0 18px;max-width:950px}.hero p{max-width:900px;color:var(--muted);font-size:1.04rem}.layout{display:grid;grid-template-columns:245px minmax(0,1fr);gap:20px;align-items:start}.toc{position:sticky;top:15px;padding:16px}.toc strong{display:block;margin-bottom:9px}.toc a{display:block;padding:6px 7px;color:var(--muted);text-decoration:none;border-radius:6px;font-size:.87rem}.toc a:hover{color:var(--teal);background:var(--teal-soft)}.content{display:grid;gap:18px}.section{padding:clamp(20px,4vw,36px);scroll-margin-top:18px}.section h2{margin:0 0 13px;font-size:clamp(1.55rem,3vw,2.25rem);letter-spacing:-.035em}.section h3{margin:28px 0 8px;font-size:1.2rem}.section h4{margin:20px 0 6px}.section p{margin:9px 0}.callout{padding:15px 17px;border-left:4px solid var(--teal);background:var(--teal-soft);border-radius:7px;margin:16px 0}.warning{border-left-color:var(--amber);background:var(--amber-soft)}.purple{border-left-color:var(--purple);background:var(--purple-soft)}.danger{border-left-color:var(--red);background:#fff0ef}.code{overflow:auto;background:var(--code);color:#e9f4f2;padding:16px 18px;border-radius:9px;font:.88rem/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre;margin:12px 0 17px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{border:1px solid var(--line);border-radius:9px;padding:15px;background:#fbfcfc}.card h4{margin:0 0 6px;color:var(--navy)}.card p{font-size:.93rem;color:var(--muted)}table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.9rem}th,td{border:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}th{background:#f1f5f5;color:var(--navy)}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#edf1f2;padding:1px 4px;border-radius:4px;font-size:.9em}.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0}.step{padding:12px;border:1px solid var(--line);border-radius:8px;background:#fbfcfc;text-align:center;font-weight:750}.small{color:var(--muted);font-size:.9rem}.trap{border:1px dashed #b7c4c8;border-radius:9px;padding:14px;background:#fafcfc;margin:14px 0}.trap strong{color:var(--navy)}.quiz{border-left:4px solid var(--purple);background:var(--purple-soft);padding:15px 17px;border-radius:7px;margin:16px 0}.method-list{columns:2;column-gap:30px}.method-list li{break-inside:avoid;margin:5px 0}.back{display:inline-block;margin-top:14px;color:var(--teal);font-weight:800;text-decoration:none}@media(max-width:820px){.layout{grid-template-columns:1fr}.toc{position:static}.grid{grid-template-columns:1fr}.flow{grid-template-columns:1fr 1fr}.method-list{columns:1}.top{align-items:flex-start}}@media(max-width:480px){.shell{width:min(100% - 16px,680px)}.flow{grid-template-columns:1fr}.section{padding:20px 16px}.hero{padding:24px 18px}.top h1{font-size:1.4rem}}
 </style>
 </head>
 <body>
 <main class="shell">
 <header class="top"><div class="brand"><div class="mark">Py</div><div><p class="eyebrow">OOP reference</p><h1>Python OOP Internals</h1></div></div><a class="home" href="python_oops_quiz.html">Back to quiz</a></header>
-<section class="hero"><p class="eyebrow">Deep-dive study guide</p><h2>Dunder methods, class decorators, and the machinery behind Python objects.</h2><p>This guide is deliberately more detailed than the quiz. It explains what Python is doing underneath ordinary-looking syntax, with runnable examples and special attention to attribute-access “trapping”: the hooks Python invokes when code reads, writes, deletes, or inspects attributes.</p><div class="callout"><strong>Core mental model:</strong> Python syntax such as <code>len(x)</code>, <code>x + y</code>, <code>with x</code>, <code>x.name</code>, and <code>x()</code> often translates into protocol calls involving special methods. Learn the protocol, not just the spelling of the method.</div></section>
+<section class="hero"><p class="eyebrow">Deep-dive study guide</p><h2>Understand what Python is doing behind the syntax.</h2><p>This is a learning guide, not just a cheat sheet. Every major protocol starts with plain language, then shows the syntax, what Python does internally, a runnable example, common mistakes, and the kind of trick that can appear in an OOP question.</p><div class="callout"><strong>One mental model:</strong> Python gives ordinary-looking syntax a meaning through protocols. <code>len(x)</code>, <code>x + y</code>, <code>x[0]</code>, <code>x()</code>, <code>with x</code>, and <code>x.name</code> can all involve special methods. You do not need to memorize magic; understand which protocol Python asks for.</div></section>
 <div class="layout">
-<nav class="toc"><strong>On this page</strong><a href="#dunder">1. What dunder means</a><a href="#lifecycle">2. Object lifecycle</a><a href="#repr">3. Representation & comparison</a><a href="#operators">4. Operators</a><a href="#containers">5. Container protocols</a><a href="#iteration">6. Iteration & async</a><a href="#context">7. Context managers</a><a href="#trapping">8. Attribute trapping</a><a href="#descriptor">9. Descriptors</a><a href="#decorators">10. Class decorators</a><a href="#builtin">11. Important built-in decorators</a><a href="#metaclass">12. Class creation & metaclasses</a><a href="#cheat">13. Cheat sheet</a></nav>
+<nav class="toc"><strong>Study map</strong><a href="#basics">1. Dunder basics</a><a href="#lifecycle">2. Object lifecycle</a><a href="#repr">3. Representation</a><a href="#compare">4. Equality & hashing</a><a href="#operators">5. Operators</a><a href="#containers">6. Containers</a><a href="#iteration">7. Iteration</a><a href="#callable">8. Callable objects</a><a href="#context">9. Context managers</a><a href="#trapping">10. Attribute trapping</a><a href="#descriptor">11. Descriptors</a><a href="#methods">12. Methods are descriptors</a><a href="#decorators">13. Class decorators</a><a href="#builtin">14. Built-in decorators</a><a href="#metaclass">15. Metaclasses</a><a href="#cheat">16. Dunder reference</a><a href="#practice">17. Practice traps</a></nav>
 <div class="content">
-<section class="section" id="dunder"><h2>1. What does “dunder” mean?</h2><p><strong>Dunder</strong> means “double underscore”. A Python special method normally has the form <code>__name__</code>. These names are part of Python's data model: they let your class participate in built-in language operations.</p><p>For example, when you write <code>len(cart)</code>, Python looks for the object's length protocol, implemented by <code>__len__</code>. When you write <code>cart[0]</code>, Python uses <code>__getitem__</code>. When you write <code>print(cart)</code>, Python eventually asks for a string representation through <code>__str__</code>.</p><div class="flow"><div class="step">Your syntax<br><span class="small">len(x)</span></div><div class="step">Python protocol<br><span class="small">__len__</span></div><div class="step">Your class<br><span class="small">method runs</span></div><div class="step">Result<br><span class="small">integer</span></div></div><div class="callout warning"><strong>Do not call dunder methods randomly.</strong> Usually write <code>len(x)</code>, <code>x + y</code>, <code>str(x)</code>, <code>x[i]</code>, etc. Let Python invoke the protocol. Direct calls are useful for learning and for some advanced implementations.</div></section>
-<section class="section" id="lifecycle"><h2>2. Object lifecycle: <code>__new__</code>, <code>__init__</code>, <code>__del__</code></h2><h3><code>__new__</code> — create the instance</h3><p><code>__new__</code> is responsible for creating and returning the instance. It receives the class as <code>cls</code>, not an existing instance. It runs before <code>__init__</code>.</p><pre class="code">class User:
+<section class="section" id="basics"><h2>1. What does “dunder” mean?</h2><p><strong>Dunder</strong> is short for “double underscore”. A name such as <code>__len__</code> is called a special method name. Python reserves many of these names for its data model.</p><p>The important idea is that you normally do not write <code>x.__len__()</code>. You write <code>len(x)</code>. Python sees the operation and uses the protocol that your class provides.</p><div class="flow"><div class="step">Your code<br><span class="small">len(cart)</span></div><div class="step">Python protocol<br><span class="small">length</span></div><div class="step">Special method<br><span class="small">__len__</span></div><div class="step">Result<br><span class="small">integer</span></div></div><pre class="code">class Cart:
+    def __init__(self):
+        self.items = ["book", "pen", "bag"]
+
+    def __len__(self):
+        return len(self.items)
+
+cart = Cart()
+print(len(cart))
+# 3</pre><p>When <code>len(cart)</code> runs, Python asks the object's type for the length protocol. Your <code>__len__</code> supplies that behavior.</p><div class="callout warning"><strong>Common mistake:</strong> special methods are not normal callbacks that Python finds by searching the instance dictionary. For many built-in operations, Python looks on the type. That is one reason changing <code>x.__len__</code> on a single instance does not behave like changing a normal instance method.</div></section>
+
+<section class="section" id="lifecycle"><h2>2. Object lifecycle: <code>__new__</code>, <code>__init__</code>, and <code>__del__</code></h2><h3>First: creation versus initialization</h3><p>These two words sound similar but mean different things. <code>__new__</code> is involved in getting an object instance. <code>__init__</code> receives that instance and initializes its state.</p><pre class="code">class User:
     def __new__(cls, name):
-        print("1. __new__")
+        print("1 - __new__")
         obj = super().__new__(cls)
         return obj
 
     def __init__(self, name):
-        print("2. __init__")
+        print("2 - __init__")
         self.name = name
 
 u = User("Harsh")
-# 1. __new__
-# 2. __init__</pre><h3><code>__init__</code> — initialize the instance</h3><p><code>__init__</code> configures an object that has already been created. It should return <code>None</code>. It is not the allocator.</p><h3><code>__del__</code> — finalization hook</h3><p><code>__del__</code> may run when an object is being finalized, but it is not a reliable general-purpose resource manager. For files, locks, database connections, etc., prefer context managers with <code>with</code>.</p><div class="callout"><strong>Exam distinction:</strong> <code>__new__</code> creates/returns the object; <code>__init__</code> initializes it. If <code>__new__</code> returns an object that is not an instance of the class, normal <code>__init__</code> handling can be skipped.</div></section>
-<section class="section" id="repr"><h2>3. Representation and comparison</h2><div class="grid"><div class="card"><h4><code>__str__</code></h4><p>Human-friendly representation used by <code>str(x)</code> and normally by <code>print(x)</code>.</p></div><div class="card"><h4><code>__repr__</code></h4><p>Developer-oriented representation used by <code>repr(x)</code> and often containers. A good repr helps debugging.</p></div><div class="card"><h4><code>__format__</code></h4><p>Controls formatted output such as <code>f"{x:.2f}"</code>.</p></div><div class="card"><h4><code>__bytes__</code></h4><p>Defines conversion through <code>bytes(x)</code>.</p></div></div><pre class="code">class Money:
+# 1 - __new__
+# 2 - __init__</pre><p>Think of it like buying a notebook. <code>__new__</code> gets the physical notebook. <code>__init__</code> writes your name and sets up the pages. Most classes only need <code>__init__</code>; <code>__new__</code> becomes useful for immutable types, factories, caching, and advanced construction.</p><h3><code>__new__</code> in an immutable type</h3><p>Immutable objects cannot be changed after creation, so values sometimes need to be supplied during <code>__new__</code>.</p><pre class="code">class PositiveInt(int):
+    def __new__(cls, value):
+        if value < 0:
+            raise ValueError("must be positive")
+        return super().__new__(cls, value)
+
+x = PositiveInt(10)
+print(x)  # 10</pre><h3><code>__del__</code></h3><p><code>__del__</code> is a finalization hook. It may run when an object is being finalized, but it is not the right place for critical cleanup. Python's garbage collection and interpreter shutdown can make its timing complicated.</p><div class="callout warning"><strong>Use this rule:</strong> if something must be released reliably, use a context manager such as <code>with open(...)</code>, not <code>__del__</code>.</div><div class="quiz"><strong>Exam trap:</strong> <code>__new__</code> returns the object; <code>__init__</code> should return <code>None</code>. If <code>__new__</code> does not return an instance of the class being constructed, normal initialization can be skipped.</div></section>
+
+<section class="section" id="repr"><h2>3. Representation: <code>__str__</code>, <code>__repr__</code>, <code>__format__</code></h2><p>There are two common questions: “How should this object look to a user?” and “How should this object look to a developer debugging it?”</p><div class="grid"><div class="card"><h4><code>__str__</code></h4><p>Human-friendly text. Used by <code>str(x)</code> and normally by <code>print(x)</code>.</p></div><div class="card"><h4><code>__repr__</code></h4><p>Developer-oriented representation. Used by <code>repr(x)</code> and often visible inside containers.</p></div><div class="card"><h4><code>__format__</code></h4><p>Controls formatting when a value appears in a format expression such as <code>f"{x:.2f}"</code>.</p></div><div class="card"><h4><code>__bytes__</code></h4><p>Controls <code>bytes(x)</code>.</p></div></div><pre class="code">class Money:
     def __init__(self, amount):
         self.amount = amount
 
@@ -41,221 +59,432 @@ u = User("Harsh")
         return f"Money({self.amount!r})"
 
 m = Money(125.5)
-print(m)        # ₹125.50
-print(repr(m))  # Money(125.5)</pre><h3>Equality and ordering</h3><table><tr><th>Method</th><th>Operation</th></tr><tr><td><code>__eq__</code></td><td><code>x == y</code></td></tr><tr><td><code>__ne__</code></td><td><code>x != y</code></td></tr><tr><td><code>__lt__</code></td><td><code>x &lt; y</code></td></tr><tr><td><code>__le__</code></td><td><code>x &lt;= y</code></td></tr><tr><td><code>__gt__</code></td><td><code>x &gt; y</code></td></tr><tr><td><code>__ge__</code></td><td><code>x &gt;= y</code></td></tr></table><p><code>__hash__</code> is related to equality. Objects used as dictionary keys or set members need a stable hash/equality relationship. Mutable objects that change the fields used for equality should generally not be hashable.</p></section>
-<section class="section" id="operators"><h2>4. Operator overloading</h2><p>Python operators are protocols. You can define how your objects respond to them.</p><table><tr><th>Syntax</th><th>Main special method</th></tr><tr><td><code>x + y</code></td><td><code>__add__</code></td></tr><tr><td><code>x - y</code></td><td><code>__sub__</code></td></tr><tr><td><code>x * y</code></td><td><code>__mul__</code></td></tr><tr><td><code>x / y</code></td><td><code>__truediv__</code></td></tr><tr><td><code>x // y</code></td><td><code>__floordiv__</code></td></tr><tr><td><code>x % y</code></td><td><code>__mod__</code></td></tr><tr><td><code>x ** y</code></td><td><code>__pow__</code></td></tr><tr><td><code>-x</code></td><td><code>__neg__</code></td></tr><tr><td><code>+x</code></td><td><code>__pos__</code></td></tr><tr><td><code>abs(x)</code></td><td><code>__abs__</code></td></tr><tr><td><code>~x</code></td><td><code>__invert__</code></td></tr></table><h3>Reflected operators</h3><p>Methods such as <code>__radd__</code>, <code>__rsub__</code>, and <code>__rmul__</code> give the right-hand object a chance to handle an operation when appropriate.</p><pre class="code">class Vector:
-    def __init__(self, x):
-        self.x = x
-    def __add__(self, other):
-        return Vector(self.x + other.x)
-    def __repr__(self):
-        return f"Vector({self.x})"
+print(m)
+print(repr(m))
 
-print(Vector(2) + Vector(3))  # Vector(5)</pre><p>Other protocols include bitwise operators (<code>__and__</code>, <code>__or__</code>, <code>__xor__</code>, shifts) and matrix multiplication (<code>__matmul__</code>, <code>__rmatmul__</code>).</p></section>
-<section class="section" id="containers"><h2>5. Container and collection protocols</h2><div class="grid"><div class="card"><h4><code>__len__</code></h4><p>Called by <code>len(x)</code>. Must return a non-negative integer.</p></div><div class="card"><h4><code>__getitem__</code></h4><p>Handles <code>x[key]</code>, including integer and slice keys.</p></div><div class="card"><h4><code>__setitem__</code></h4><p>Handles <code>x[key] = value</code>.</p></div><div class="card"><h4><code>__delitem__</code></h4><p>Handles <code>del x[key]</code>.</p></div><div class="card"><h4><code>__contains__</code></h4><p>Handles membership testing with <code>item in x</code>.</p></div><div class="card"><h4><code>__iter__</code> / <code>__next__</code></h4><p>Define iteration and iterator advancement.</p></div></div><pre class="code">class Playlist:
+# ₹125.50
+# Money(125.5)</pre><p>Notice the difference. <code>str(m)</code> answers “what should a person see?” while <code>repr(m)</code> answers “what representation helps me understand the object?”</p><div class="callout"><strong>Fallback:</strong> if a class does not define <code>__str__</code>, Python can fall back to <code>__repr__</code>. A useful <code>__repr__</code> therefore improves debugging even when you never write <code>__str__</code>.</div></section>
+
+<section class="section" id="compare"><h2>4. Equality, ordering, and hashing</h2><p>By default, two separate user-defined objects are usually compared by identity. You can define value-based equality with <code>__eq__</code>.</p><pre class="code">class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __eq__(self, other):
+        if not isinstance(other, Point):
+            return NotImplemented
+        return self.x == other.x and self.y == other.y
+
+print(Point(2, 3) == Point(2, 3))
+# True</pre><p>Returning <code>NotImplemented</code> is different from returning <code>False</code>. It tells Python that your method does not know how to compare those types, so Python may try the other operand's implementation or use the normal fallback.</p><h3>Ordering</h3><table><tr><th>Operation</th><th>Method</th></tr><tr><td><code>x == y</code></td><td><code>__eq__</code></td></tr><tr><td><code>x != y</code></td><td><code>__ne__</code></td></tr><tr><td><code>x &lt; y</code></td><td><code>__lt__</code></td></tr><tr><td><code>x &lt;= y</code></td><td><code>__le__</code></td></tr><tr><td><code>x &gt; y</code></td><td><code>__gt__</code></td></tr><tr><td><code>x &gt;= y</code></td><td><code>__ge__</code></td></tr></table><h3><code>__hash__</code></h3><p>Hashing matters for sets and dictionary keys. If <code>a == b</code>, their hashes must agree. That is why mutable objects need care: if a value used for equality changes after insertion into a set, the set can no longer behave correctly.</p><pre class="code">class User:
+    def __init__(self, user_id):
+        self.user_id = user_id
+
+    def __eq__(self, other):
+        return isinstance(other, User) and self.user_id == other.user_id
+
+    def __hash__(self):
+        return hash(self.user_id)
+
+users = {User(10)}
+print(User(10) in users)
+# True</pre></section>
+
+<section class="section" id="operators"><h2>5. Operator overloading</h2><p>Operators are another part of the data model. If you define the right special method, your class can participate in normal Python expressions.</p><table><tr><th>Syntax</th><th>Main method</th></tr><tr><td><code>x + y</code></td><td><code>__add__</code></td></tr><tr><td><code>x - y</code></td><td><code>__sub__</code></td></tr><tr><td><code>x * y</code></td><td><code>__mul__</code></td></tr><tr><td><code>x / y</code></td><td><code>__truediv__</code></td></tr><tr><td><code>x // y</code></td><td><code>__floordiv__</code></td></tr><tr><td><code>x % y</code></td><td><code>__mod__</code></td></tr><tr><td><code>x ** y</code></td><td><code>__pow__</code></td></tr><tr><td><code>-x</code></td><td><code>__neg__</code></td></tr><tr><td><code>+x</code></td><td><code>__pos__</code></td></tr><tr><td><code>abs(x)</code></td><td><code>__abs__</code></td></tr></table><pre class="code">class Money:
+    def __init__(self, amount):
+        self.amount = amount
+
+    def __add__(self, other):
+        if not isinstance(other, Money):
+            return NotImplemented
+        return Money(self.amount + other.amount)
+
+    def __repr__(self):
+        return f"Money({self.amount})"
+
+print(Money(100) + Money(50))
+# Money(150)</pre><h3>Reflected operators</h3><p>There is also a right-hand family: <code>__radd__</code>, <code>__rsub__</code>, <code>__rmul__</code>, and so on. These matter when the left operand cannot handle the other type.</p><pre class="code">class Score:
+    def __init__(self, value):
+        self.value = value
+
+    def __radd__(self, other):
+        return other + self.value
+
+s = Score(10)
+print(5 + s)
+# 15</pre><p>For in-place operators, Python may use methods such as <code>__iadd__</code>. A mutable object can modify itself, while an immutable object can return a new object.</p><div class="callout warning"><strong>Do not blindly return <code>False</code> for an unsupported type.</strong> <code>NotImplemented</code> gives Python a chance to try the other operand's protocol.</div></section>
+
+<section class="section" id="containers"><h2>6. Making your object behave like a container</h2><p>You can make a class feel like a list, dictionary, or other collection by implementing the relevant protocols.</p><table><tr><th>Syntax</th><th>Method</th></tr><tr><td><code>len(x)</code></td><td><code>__len__</code></td></tr><tr><td><code>x[key]</code></td><td><code>__getitem__</code></td></tr><tr><td><code>x[key] = value</code></td><td><code>__setitem__</code></td></tr><tr><td><code>del x[key]</code></td><td><code>__delitem__</code></td></tr><tr><td><code>key in x</code></td><td><code>__contains__</code></td></tr><tr><td><code>reversed(x)</code></td><td><code>__reversed__</code></td></tr><tr><td><code>for item in x</code></td><td><code>__iter__</code> / iteration protocol</td></tr></table><pre class="code">class Playlist:
     def __init__(self, songs):
-        self.songs = songs
+        self.songs = list(songs)
+
     def __len__(self):
         return len(self.songs)
+
     def __getitem__(self, index):
         return self.songs[index]
+
     def __contains__(self, song):
         return song in self.songs
 
 p = Playlist(["A", "B", "C"])
-print(len(p))      # 3
-print(p[1])        # B
-print("C" in p)   # True
-print(p[0:2])      # ['A', 'B']</pre><p>Other useful protocols include <code>__reversed__</code> for <code>reversed(x)</code>, <code>__missing__</code> for subclasses of <code>dict</code>, and <code>__index__</code> for objects that can act as integer indices in low-level operations.</p></section>
-<section class="section" id="iteration"><h2>6. Iteration, calling, truth testing, and async</h2><h3>Iteration</h3><p>An iterable normally supplies <code>__iter__</code>. An iterator supplies <code>__next__</code> and returns itself from <code>__iter__</code>. When it is exhausted, <code>__next__</code> raises <code>StopIteration</code>.</p><pre class="code">class CountUp:
+print(len(p))
+print(p[1])
+print("B" in p)
+# 3
+# B
+# True</pre><p>Notice how the class never defines a method named “square brackets”. The syntax is mapped to a protocol.</p><h3>Slices</h3><p><code>__getitem__</code> can receive a <code>slice</code> object, so <code>x[1:4]</code> can be handled by checking the key.</p><pre class="code">class Numbers:
+    def __init__(self, values):
+        self.values = list(values)
+
+    def __getitem__(self, key):
+        return self.values[key]
+
+n = Numbers([10, 20, 30, 40])
+print(n[1:3])
+# [20, 30]</pre></section>
+
+<section class="section" id="iteration"><h2>7. Iteration: <code>__iter__</code> and <code>__next__</code></h2><p>A <code>for</code> loop asks for an iterator. An iterator supplies values one at a time and raises <code>StopIteration</code> when it is finished.</p><pre class="code">class CountUp:
     def __init__(self, stop):
         self.current = 0
         self.stop = stop
+
     def __iter__(self):
         return self
+
     def __next__(self):
         if self.current >= self.stop:
             raise StopIteration
+        value = self.current
         self.current += 1
-        return self.current
+        return value
 
 for n in CountUp(3):
-    print(n)  # 1, 2, 3</pre><h3><code>__call__</code> — make an object callable</h3><pre class="code">class Multiplier:
+    print(n)
+# 0
+# 1
+# 2</pre><p>The important distinction is that an <strong>iterable</strong> can produce an iterator, while an <strong>iterator</strong> remembers its current position and implements <code>__next__</code>.</p><div class="flow"><div class="step">for loop</div><div class="step">iter(obj)</div><div class="step">next(iterator)</div><div class="step">StopIteration</div></div><h3>Async iteration</h3><p>Async code has corresponding protocols such as <code>__aiter__</code> and <code>__anext__</code>, used by <code>async for</code>. They are the same idea applied to asynchronous data production.</p></section>
+
+<section class="section" id="callable"><h2>8. Callable objects: <code>__call__</code></h2><p>Normally, <code>f()</code> means “call function <code>f</code>”. But classes can also make their instances callable.</p><pre class="code">class Multiplier:
     def __init__(self, factor):
         self.factor = factor
+
     def __call__(self, value):
         return value * self.factor
 
-times3 = Multiplier(3)
-print(times3(10))  # 30</pre><h3><code>__bool__</code></h3><p>Controls truth testing such as <code>if obj:</code> and <code>bool(obj)</code>. If <code>__bool__</code> is absent, Python can fall back to <code>__len__</code>.</p><h3>Async protocols</h3><p><code>__await__</code> participates in <code>await x</code>. Async iteration uses <code>__aiter__</code> and <code>__anext__</code>, with <code>async for</code>. Async context managers use <code>__aenter__</code> and <code>__aexit__</code>.</p></section>
-<section class="section" id="context"><h2>7. Context managers</h2><p>The expression <code>with resource as value:</code> uses the context-manager protocol.</p><pre class="code">class ManagedFile:
-    def __init__(self, path, mode):
-        self.path = path
-        self.mode = mode
+double = Multiplier(2)
+print(double(7))
+# 14</pre><p>After defining <code>__call__</code>, <code>double(7)</code> becomes a natural interface for an object that behaves like a function.</p><h3>Useful real-world pattern</h3><p>Callable objects are useful for validators, configuration-based processors, machine-learning models, retry policies, and stateful callbacks because the object can remember configuration in attributes.</p><pre class="code">class MinimumLength:
+    def __init__(self, minimum):
+        self.minimum = minimum
+
+    def __call__(self, text):
+        return len(text) >= self.minimum
+
+valid_name = MinimumLength(3)
+print(valid_name("Hi"))
+print(valid_name("Harsh"))
+# False
+# True</pre></section>
+
+<section class="section" id="context"><h2>9. Context managers: <code>__enter__</code> and <code>__exit__</code></h2><p>The <code>with</code> statement is a protocol. A context manager prepares something when entering and cleans it up when leaving.</p><pre class="code">class Demo:
     def __enter__(self):
-        self.file = open(self.path, self.mode)
-        return self.file
+        print("enter")
+        return self
+
     def __exit__(self, exc_type, exc_value, traceback):
-        self.file.close()
+        print("exit")
         return False
 
-with ManagedFile("notes.txt", "w") as f:
-    f.write("hello")</pre><p><code>__enter__</code> runs when entering the block. <code>__exit__</code> runs when leaving it, even if an exception occurs. Returning <code>True</code> from <code>__exit__</code> suppresses the exception; returning <code>False</code> or <code>None</code> lets it propagate.</p><div class="callout"><strong>Why this matters:</strong> this protocol is why <code>with open(...)</code> can reliably close a file. It is a language-level cleanup pattern, not merely a convenience syntax.</div></section>
-<section class="section" id="trapping"><h2>8. Attribute “trapping” in detail</h2><p>“Trapping” is a useful way to think about intercepting normal attribute operations. Instead of Python simply reading or writing a value, your class can insert logic into the operation.</p><div class="flow"><div class="step">obj.name</div><div class="step">attribute hook</div><div class="step">validation / lookup / logging</div><div class="step">value</div></div><h3><code>__getattribute__</code> — trap every attribute read</h3><p>This is the most important hook. Python calls it for essentially every normal instance attribute lookup. That includes attempts to access methods. Because it sees everything, careless implementations can recurse forever.</p><pre class="code">class Traced:
+with Demo() as d:
+    print("inside")
+
+# enter
+# inside
+# exit</pre><p>Conceptually, Python ensures that the exit hook is called even when the block raises an exception. The three arguments supplied to <code>__exit__</code> describe an active exception; if there is no exception they are <code>None</code>.</p><h3>Suppressing an exception</h3><pre class="code">class IgnoreErrors:
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        return True
+
+with IgnoreErrors():
+    raise ValueError("ignored")
+
+print("still running")
+# still running</pre><div class="callout warning"><strong>Be careful:</strong> returning <code>True</code> from <code>__exit__</code> suppresses the exception. Most context managers should return <code>False</code> or <code>None</code> unless suppression is intentional.</div></section>
+
+<section class="section" id="trapping"><h2>10. Attribute trapping — the part you should understand deeply</h2><p>“Attribute trapping” means intercepting ordinary attribute operations so your class can observe, validate, redirect, or synthesize them.</p><p>There are four especially important hooks:</p><ul><li><code>__getattribute__</code> — runs for essentially every normal attribute read.</li><li><code>__getattr__</code> — fallback called when normal lookup fails.</li><li><code>__setattr__</code> — intercepts normal attribute assignment.</li><li><code>__delattr__</code> — intercepts normal attribute deletion.</li></ul><div class="callout purple"><strong>The key distinction:</strong> <code>__getattribute__</code> is the gate you pass through when reading an attribute. <code>__getattr__</code> is a fallback after ordinary lookup fails. They are not interchangeable.</div>
+<h3>10.1 Start with normal lookup</h3><pre class="code">class Person:
+    def __init__(self):
+        self.name = "Harsh"
+
+p = Person()
+print(p.name)</pre><p>It feels simple: “look inside <code>p</code> and get <code>name</code>”. But Python's object model has a lookup process involving the class, the instance dictionary, inheritance, and descriptors.</p><div class="flow"><div class="step">p.name</div><div class="step">attribute lookup</div><div class="step">class / descriptor / instance data</div><div class="step">value returned</div></div>
+<h3>10.2 <code>__getattribute__</code>: intercept every read</h3><pre class="code">class Person:
     def __init__(self):
         self.name = "Harsh"
 
     def __getattribute__(self, name):
-        print("READ:", name)
+        print("Reading:", name)
         return object.__getattribute__(self, name)
 
-x = Traced()
-print(x.name)
-# READ: name
-# Harsh</pre><p>Notice the use of <code>object.__getattribute__(self, name)</code>. Writing <code>return self.name</code> inside the hook would call <code>__getattribute__</code> again, which calls it again, and so on.</p><h3><code>__getattr__</code> — trap only missing attributes</h3><p><code>__getattr__</code> is different. Python invokes it after normal lookup fails with <code>AttributeError</code>.</p><pre class="code">class Settings:
+p = Person()
+print(p.name)
+# Reading: name
+# Harsh</pre><p>When <code>p.name</code> is evaluated, your override gets the string <code>"name"</code>. You can log it, redirect it, or enforce a policy. But eventually you normally delegate to <code>object.__getattribute__</code> so Python can perform the normal lookup.</p>
+<h3>10.3 Why naive implementations recurse forever</h3><pre class="code">class Person:
+    def __init__(self):
+        self.name = "Harsh"
+
+    def __getattribute__(self, name):
+        print("Reading", self.name)  # BAD
+        return object.__getattribute__(self, name)</pre><p>Why is <code>self.name</code> bad inside <code>__getattribute__</code>? Because reading <code>self.name</code> calls <code>__getattribute__</code> again. That second call tries to read <code>self.name</code>, which calls it again, and so on until Python raises <code>RecursionError</code>.</p><p>The safe escape hatch is to use the base implementation directly:</p><pre class="code">object.__getattribute__(self, "name")</pre><div class="callout"><strong>Rule to remember:</strong> inside <code>__getattribute__</code>, do not use <code>self.some_attribute</code> unless you deliberately want to trigger the trap again. Use <code>object.__getattribute__(self, "some_attribute")</code> when you need safe normal lookup.</div>
+<h3>10.4 Practical example: logging attribute reads</h3><pre class="code">class LoggedObject:
+    def __getattribute__(self, name):
+        print(f"READ {name}")
+        return object.__getattribute__(self, name)
+
+class User(LoggedObject):
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+u = User("Harsh", 22)
+print(u.age)
+# READ age
+# 22</pre><p>Because <code>__getattribute__</code> is inherited, the logging behavior applies to the subclass too.</p>
+<h3>10.5 <code>__getattr__</code>: a fallback, not the first gate</h3><pre class="code">class Settings:
     def __init__(self):
         self.theme = "dark"
 
     def __getattr__(self, name):
-        return f"default for {name}"
+        return f"{name} is not configured"
 
 s = Settings()
-print(s.theme)      # dark
-print(s.language)   # default for language</pre><div class="callout"><strong>Key difference:</strong> <code>__getattribute__</code> sees successful and unsuccessful reads. <code>__getattr__</code> is the fallback for a missing attribute.</div><h3><code>__setattr__</code> — trap assignments</h3><pre class="code">class User:
+print(s.theme)
+print(s.language)
+# dark
+# language is not configured</pre><p>For <code>s.theme</code>, normal lookup succeeds, so <code>__getattr__</code> is not needed. For <code>s.language</code>, normal lookup fails, so Python gives <code>__getattr__</code> a chance to produce a value.</p><div class="flow"><div class="step">s.language</div><div class="step">__getattribute__</div><div class="step">lookup fails</div><div class="step">__getattr__ fallback</div></div>
+<h3>10.6 <code>__setattr__</code>: intercept assignment</h3><pre class="code">class Person:
     def __setattr__(self, name, value):
         if name == "age" and value < 0:
             raise ValueError("age cannot be negative")
         object.__setattr__(self, name, value)
 
-u = User()
-u.age = 20
-# u.age = -1  -> ValueError</pre><p>Again, use <code>object.__setattr__</code> (or <code>super().__setattr__</code>) to perform the actual assignment. Writing <code>self.name = value</code> inside <code>__setattr__</code> would recursively invoke the hook.</p><h3><code>__delattr__</code> — trap deletion</h3><pre class="code">class Protected:
+p = Person()
+p.age = 22
+print(p.age)
+# 22</pre><p>When Python evaluates <code>p.age = 22</code>, it can call <code>p.__setattr__("age", 22)</code>. The override validates the value and delegates the actual storage to the base implementation.</p><h4>The recursion trap</h4><pre class="code">def __setattr__(self, name, value):
+    self.__dict__[name] = value
+
+# This version can work, but if you write:
+# self.__dict__ = something
+# you are assigning an attribute again and can trigger the trap.</pre><p>For simple cases, <code>object.__setattr__(self, name, value)</code> is the clearest delegation method.</p>
+<h3>10.7 <code>__delattr__</code>: intercept deletion</h3><pre class="code">class Locked:
     def __init__(self):
-        self.token = "secret"
+        self.name = "Harsh"
+
     def __delattr__(self, name):
-        if name == "token":
-            raise AttributeError("token cannot be deleted")
-        object.__delattr__(self, name)</pre><h3><code>__dir__</code> — customize introspection</h3><p><code>dir(obj)</code> normally asks the object for names it considers useful. A custom <code>__dir__</code> can expose a curated list, although it should be used carefully because tools and developers expect <code>dir()</code> to be informative.</p><h3>Complete trapping example</h3><pre class="code">class Observable:
+        if name == "name":
+            raise AttributeError("name cannot be deleted")
+        object.__delattr__(self, name)
+
+x = Locked()
+del x.name
+# AttributeError</pre>
+<h3>10.8 Putting all four together</h3><pre class="code">class Trapped:
     def __init__(self):
-        object.__setattr__(self, "_data", {})
+        self.name = "Harsh"
 
     def __getattribute__(self, name):
-        if name == "_data":
-            return object.__getattribute__(self, name)
-        data = object.__getattribute__(self, "_data")
-        if name in data:
-            print("GET", name)
-            return data[name]
+        print("GET", name)
         return object.__getattribute__(self, name)
+
+    def __getattr__(self, name):
+        print("FALLBACK", name)
+        return "missing"
 
     def __setattr__(self, name, value):
         print("SET", name, value)
-        data = object.__getattribute__(self, "_data")
-        data[name] = value
+        object.__setattr__(self, name, value)
 
-x = Observable()
-x.score = 42
-print(x.score)
-# SET score 42
-# GET score
-# 42</pre><p>This is conceptually similar to a proxy: ordinary syntax is preserved while the class inserts behavior around the operation. The same idea appears in validation frameworks, lazy attributes, ORMs, observable objects, configuration objects, and mocking libraries.</p><div class="callout warning"><strong>Do not overuse trapping.</strong> It is powerful but easy to make confusing. Prefer normal attributes, properties, or descriptors when they express the intent more clearly.</div></section>
-<section class="section" id="descriptor"><h2>9. Descriptors: the deeper attribute machinery</h2><p>A descriptor is an object that defines methods such as <code>__get__</code>, <code>__set__</code>, or <code>__delete__</code>. Descriptors are a major part of how Python implements properties, methods, and many framework APIs.</p><pre class="code">class Positive:
+    def __delattr__(self, name):
+        print("DELETE", name)
+        object.__delattr__(self, name)
+
+x = Trapped()
+print(x.name)
+print(x.age)
+x.age = 22
+del x.age</pre><p>Trace it mentally. Creating <code>x</code> calls <code>__setattr__</code> for <code>name</code>. Reading <code>x.name</code> calls <code>__getattribute__</code> and succeeds. Reading <code>x.age</code> enters <code>__getattribute__</code>, fails normal lookup, then reaches <code>__getattr__</code>. Assigning <code>x.age</code> uses <code>__setattr__</code>. Deleting it uses <code>__delattr__</code>.</p>
+<h3>10.9 Why attribute trapping is useful</h3><div class="grid"><div class="card"><h4>Validation</h4><p>Reject invalid assignments before they reach object state.</p></div><div class="card"><h4>Lazy values</h4><p>Compute a value only when code first asks for it.</p></div><div class="card"><h4>Logging</h4><p>Observe reads and writes for debugging or auditing.</p></div><div class="card"><h4>Proxies</h4><p>Forward unknown attributes to another object or service.</p></div></div><div class="callout danger"><strong>Do not overuse it.</strong> Attribute hooks can make code difficult to understand. Prefer normal properties, methods, or descriptors when they express the intention more clearly.</div></section>
+
+<section class="section" id="descriptor"><h2>11. Descriptors: the machinery behind many “magic” attributes</h2><p>A descriptor is an object that defines methods such as <code>__get__</code>, <code>__set__</code>, or <code>__delete__</code>. Descriptors control what happens when an attribute is accessed.</p><p>This sounds abstract, so start with a tiny example.</p><pre class="code">class LoggedValue:
     def __set_name__(self, owner, name):
         self.name = name
+
+    def __get__(self, instance, owner):
+        if instance is None:
+            return self
+        print("GET", self.name)
+        return instance.__dict__.get(self.name)
+
+    def __set__(self, instance, value):
+        print("SET", self.name, value)
+        instance.__dict__[self.name] = value
+
+class User:
+    age = LoggedValue()
+
+u = User()
+u.age = 22
+print(u.age)</pre><p>The class attribute <code>age</code> is not a normal number. It is a descriptor. When Python sees <code>u.age</code>, the descriptor can control the operation.</p><h3>Data versus non-data descriptors</h3><p>A descriptor implementing <code>__set__</code> or <code>__delete__</code> is a <strong>data descriptor</strong>. A descriptor implementing only <code>__get__</code> is a non-data descriptor. This distinction matters because it affects precedence during attribute lookup.</p><div class="flow"><div class="step">data descriptor</div><div class="step">instance dictionary</div><div class="step">non-data descriptor</div><div class="step">class attribute / MRO</div></div><p>This is one reason a property can enforce validation even when an instance dictionary contains a tempting-looking value: a property is a data descriptor when it defines a setter.</p><h3><code>__set_name__</code></h3><p>Python calls <code>__set_name__</code> when the descriptor is assigned as part of class creation. It lets the descriptor learn the attribute name automatically.</p><pre class="code">class Field:
+    def __set_name__(self, owner, name):
+        self.name = name
+
     def __get__(self, instance, owner):
         if instance is None:
             return self
         return instance.__dict__.get(self.name)
+
     def __set__(self, instance, value):
-        if value <= 0:
-            raise ValueError("must be positive")
         instance.__dict__[self.name] = value
 
-class Product:
-    price = Positive()
-
-p = Product()
-p.price = 10
-print(p.price)  # 10</pre><p>Properties are built with descriptor machinery. This is why <code>@property</code> can make a method behave like an attribute.</p><h3>Why methods are descriptors</h3><p>A function defined on a class implements descriptor behavior. When you access <code>obj.method</code>, Python produces a bound method with <code>obj</code> supplied as the first argument. That is the underlying reason <code>self</code> appears automatically.</p><pre class="code">class Greeter:
-    def hello(self):
-        return "hi"
-
-g = Greeter()
-# Greeter.hello is the function stored on the class.
-# g.hello is a bound method that remembers g as self.</nprint(g.hello())</pre><p>Other descriptor hooks include <code>__set_name__</code>, which lets a descriptor learn the attribute name assigned to it, and <code>__delete__</code> for deletion.</p></section>
-<section class="section" id="decorators"><h2>10. Class decorators</h2><p>A class decorator is a callable applied to a class immediately after the class statement creates it.</p><pre class="code">@decorate
 class User:
+    username = Field()
+    email = Field()
+
+u = User()
+u.username = "harsh"
+print(u.username)
+# harsh</pre><p>The same descriptor class can now be reused for different fields without hard-coding the names.</p></section>
+
+<section class="section" id="methods"><h2>12. Why normal methods work: functions are descriptors</h2><p>This is one of Python's most useful internal connections. A function stored on a class can act as a descriptor.</p><pre class="code">class Person:
+    def greet(self):
+        return "hello"
+
+p = Person()
+print(p.greet())</pre><p>You write <code>p.greet()</code>, but the function was stored on <code>Person</code>. Python's descriptor machinery turns the function into a bound method, supplying <code>p</code> as the first argument.</p><p>That is why this:</p><pre class="code">p.greet()</pre><p>is conceptually related to retrieving the function from the class and binding the instance to it. The exact descriptor protocol is more precise than simply saying “Python inserts self”, but this mental model is excellent for learning.</p><h3><code>staticmethod</code> changes binding</h3><pre class="code">class Math:
+    def normal(self, x):
+        return x * 2
+
+    @staticmethod
+    def double(x):
+        return x * 2
+
+m = Math()
+print(m.double(5))
+# 10</pre><p>The static method wrapper prevents the normal instance binding behavior. No <code>self</code> is automatically supplied.</p></section>
+
+<section class="section" id="decorators"><h2>13. Class decorators — from syntax to real implementation</h2><p>A decorator is a callable that receives something and returns a replacement or modified version of it. A class decorator receives a class.</p><h3>13.1 The syntax transformation</h3><pre class="code">@add_feature
+class Person:
+    pass</pre><p>means approximately:</p><pre class="code">class Person:
     pass
 
-# roughly means:
-class User:
-    pass
-User = decorate(User)</pre><p>The decorator receives the class object and may return the same class, a modified class, or even a replacement object.</p><h3>Simple example</h3><pre class="code">def add_debug_flag(cls):
-    cls.debug = True
+Person = add_feature(Person)</pre><p>This is the first thing to memorize. The decorator runs after the class body has created the class object.</p><h3>13.2 A tiny class decorator</h3><pre class="code">def add_greeting(cls):
+    def greet(self):
+        return f"Hello, {self.name}!"
+
+    cls.greet = greet
     return cls
 
-@add_debug_flag
-class Service:
-    pass
+@add_greeting
+class Person:
+    def __init__(self, name):
+        self.name = name
 
-print(Service.debug)  # True</pre><h3>Class decorator that wraps methods</h3><pre class="code">def add_logging(cls):
+p = Person("Harsh")
+print(p.greet())
+# Hello, Harsh!</pre><p>The decorator receives <code>Person</code>, adds a method, and returns the same class.</p><h3>13.3 A decorator that wraps an existing method</h3><pre class="code">from functools import wraps
+
+def log_methods(cls):
     original = cls.run
-    def run(self, *args, **kwargs):
-        print("running")
+
+    @wraps(original)
+    def wrapped(self, *args, **kwargs):
+        print("RUNNING", cls.__name__)
         return original(self, *args, **kwargs)
-    cls.run = run
+
+    cls.run = wrapped
     return cls
 
-@add_logging
+@log_methods
 class Job:
     def run(self):
         return "done"
 
 print(Job().run())
-# running
-# done</pre><div class="callout purple"><strong>Class decorator vs metaclass:</strong> a class decorator modifies a class after the class object has been created. A metaclass controls class creation itself. For many practical customizations, a class decorator is simpler and easier to reason about.</div></section>
-<section class="section" id="builtin"><h2>11. Important built-in decorators</h2><h3><code>@classmethod</code></h3><p>The decorated method receives the class as its first argument, conventionally called <code>cls</code>. It is useful for alternate constructors and class-level operations.</p><pre class="code">class User:
+# RUNNING Job
+# done</pre><p><code>functools.wraps</code> helps preserve useful metadata such as the wrapped function's name and documentation.</p><h3>13.4 Decorators with arguments</h3><pre class="code">def tag(label):
+    def decorate(cls):
+        cls.tag = label
+        return cls
+    return decorate
+
+@tag("admin")
+class User:
+    pass
+
+print(User.tag)
+# admin</pre><p>Here <code>tag("admin")</code> first creates a decorator. That decorator then receives the class.</p><h3>13.5 Multiple decorators and order</h3><pre class="code">@outer
+@inner
+class Demo:
+    pass</pre><p>is equivalent to:</p><pre class="code">class Demo:
+    pass
+
+Demo = inner(Demo)
+Demo = outer(Demo)</pre><p>So decorators are applied from the bottom upward. This becomes important when two decorators both modify or replace the class.</p><div class="quiz"><strong>PRA trap:</strong> if you see three decorators, do not read them from top to bottom as “first, second, third”. Write the equivalent assignments and evaluate them from the bottom decorator outward.</div><h3>13.6 Class decorator versus metaclass</h3><p>A class decorator usually modifies a class <em>after</em> the class has been created. A metaclass controls the class creation process itself. Use a decorator when a normal transformation is enough; use a metaclass only when you genuinely need class-creation-level control.</p></section>
+
+<section class="section" id="builtin"><h2>14. Important built-in decorators</h2><h3><code>@classmethod</code></h3><p>A class method receives the class as its first argument, conventionally named <code>cls</code>. It is useful for alternate constructors and operations involving class-level state.</p><pre class="code">class User:
     def __init__(self, name):
         self.name = name
 
     @classmethod
-    def from_email(cls, email):
-        name = email.split("@")[0]
-        return cls(name)
+    def guest(cls):
+        return cls("Guest")
 
-u = User.from_email("harsh@example.com")</pre><h3><code>@staticmethod</code></h3><p>No <code>self</code> or <code>cls</code> is automatically supplied. It is a normal function stored in the class namespace for logical grouping.</p><pre class="code">class Math:
+u = User.guest()
+print(u.name)
+# Guest</pre><p>Because it receives <code>cls</code>, a subclass can inherit the method and still construct the subclass when the method uses <code>cls(...)</code>.</p><h3><code>@staticmethod</code></h3><p>A static method receives no automatic <code>self</code> or <code>cls</code>. It is simply a function stored in the class namespace because the function conceptually belongs with the class.</p><pre class="code">class Temperature:
     @staticmethod
-    def clamp(value, low, high):
-        return max(low, min(value, high))
+    def c_to_f(c):
+        return c * 9 / 5 + 32
 
-print(Math.clamp(12, 0, 10))  # 10</pre><h3><code>@property</code>, <code>@x.setter</code>, <code>@x.deleter</code></h3><p>These expose method-backed behavior using attribute syntax.</p><pre class="code">class Account:
-    def __init__(self, balance):
-        self._balance = balance
+print(Temperature.c_to_f(0))
+# 32.0</pre><h3><code>@property</code></h3><p>A property makes method-like logic look like an attribute. This is excellent for validation and computed values.</p><pre class="code">class Celsius:
+    def __init__(self, value):
+        self._value = value
 
     @property
-    def balance(self):
-        return self._balance
+    def value(self):
+        return self._value
 
-    @balance.setter
-    def balance(self, value):
-        if value < 0:
-            raise ValueError("negative balance")
-        self._balance = value
+    @value.setter
+    def value(self, new):
+        if new < -273.15:
+            raise ValueError("below absolute zero")
+        self._value = new
 
-    @balance.deleter
-    def balance(self):
-        self._balance = 0</pre><h3><code>@abstractmethod</code></h3><p>Used with <code>ABC</code> to define an interface/contract. A concrete subclass must implement the abstract method before it can be instantiated.</p><pre class="code">from abc import ABC, abstractmethod
+c = Celsius(20)
+c.value = 25
+print(c.value)
+# 25</pre><p>Under the surface, <code>property</code> is a descriptor. That connects decorators, descriptors, and attribute trapping into one idea.</p><h3><code>@abstractmethod</code></h3><pre class="code">from abc import ABC, abstractmethod
 
 class Shape(ABC):
     @abstractmethod
     def area(self):
-        ...
+        pass
 
-class Square(Shape):
-    def __init__(self, side):
-        self.side = side
+class Circle(Shape):
+    def __init__(self, r):
+        self.r = r
+
     def area(self):
-        return self.side ** 2</pre><h3><code>@dataclass</code></h3><p>From the standard library, <code>dataclasses.dataclass</code> can generate common methods such as an initializer and representations, and optionally equality and ordering depending on its arguments.</p><pre class="code">from dataclasses import dataclass
+        return 3.14159 * self.r ** 2
+
+# Shape() -> TypeError
+# Circle(2) -> allowed</pre><p>The abstract method creates a contract. A concrete subclass must implement the required operation before it can be instantiated.</p><h3><code>@dataclass</code></h3><p><code>@dataclass</code> is a class decorator that can generate common methods such as <code>__init__</code>, <code>__repr__</code>, and <code>__eq__</code> based on declared fields.</p><pre class="code">from dataclasses import dataclass
 
 @dataclass
 class Point:
@@ -263,23 +492,101 @@ class Point:
     y: int
 
 p = Point(2, 3)
-print(p)  # Point(x=2, y=3)</pre><h3>Other useful class decorators</h3><div class="grid"><div class="card"><h4><code>@functools.total_ordering</code></h4><p>Given equality plus one ordering operation, supplies the other ordering methods.</p></div><div class="card"><h4><code>@typing.final</code></h4><p>Marks a class or method as not intended to be overridden. It is primarily a static type-checking signal, not a runtime enforcement mechanism.</p></div><div class="card"><h4><code>@typing.override</code></h4><p>Marks a method as intentionally overriding a base-class method. Type checkers can verify the relationship.</p></div><div class="card"><h4><code>@functools.cached_property</code></h4><p>Computes a property once and caches the result on the instance, useful for expensive derived values.</p></div></div></section>
-<section class="section" id="metaclass"><h2>12. Class creation and metaclasses</h2><p>Everything is an object in Python, including classes. A class is itself an instance of a metaclass. By default, most user-defined classes use <code>type</code> as their metaclass.</p><pre class="code">class User:
+print(p)
+# Point(x=2, y=3)</pre><p>This is a useful real-world example of a decorator doing substantial class transformation for you.</p><h3>Other useful decorators</h3><table><tr><th>Decorator</th><th>Purpose</th></tr><tr><td><code>@functools.total_ordering</code></td><td>Can fill in ordering methods from a smaller set of definitions.</td></tr><tr><td><code>@functools.cached_property</code></td><td>Computes a property once and caches the result on the instance.</td></tr><tr><td><code>@typing.final</code></td><td>Type-checking signal that a class or method should not be overridden.</td></tr><tr><td><code>@typing.override</code></td><td>Type-checking signal that a method is intended to override a base method.</td></tr></table></section>
+
+<section class="section" id="metaclass"><h2>15. Class creation and metaclasses</h2><p>A class is itself an object. In normal Python, classes are instances of <code>type</code>. That means there are two levels:</p><div class="flow"><div class="step">instance<br><span class="small">p</span></div><div class="step">class<br><span class="small">Person</span></div><div class="step">metaclass<br><span class="small">type</span></div><div class="step">Python object model</div></div><pre class="code">class Person:
     pass
 
-print(type(User))  # <class 'type'>
-print(type(User()) )  # <class '__main__.User'></pre><p>A custom metaclass can intercept class creation. The key hooks are <code>__prepare__</code>, <code>__new__</code>, and <code>__init__</code> on the metaclass.</p><pre class="code">class Registry(type):
-    registry = {}
+p = Person()
+print(type(p))
+print(type(Person))
+# <class '__main__.Person'>
+# <class 'type'></pre><p>A custom metaclass can customize class creation.</p><pre class="code">class Meta(type):
     def __new__(mcls, name, bases, namespace):
-        cls = super().__new__(mcls, name, bases, namespace)
-        mcls.registry[name] = cls
-        return cls
+        print("Creating class:", name)
+        return super().__new__(mcls, name, bases, namespace)
 
-class Service(metaclass=Registry):
+class User(metaclass=Meta):
     pass
 
-print(Registry.registry["Service"] is Service)  # True</pre><p>Use metaclasses only when the problem genuinely concerns class creation. If you only need to add behavior to an already-created class, a class decorator is usually easier.</p></section>
-<section class="section" id="cheat"><h2>13. Dunder cheat sheet</h2><ul class="method-list"><li><code>__new__</code> — create an instance</li><li><code>__init__</code> — initialize an instance</li><li><code>__del__</code> — finalization hook</li><li><code>__str__</code> — human-readable text</li><li><code>__repr__</code> — developer representation</li><li><code>__format__</code> — formatted representation</li><li><code>__bytes__</code> — bytes conversion</li><li><code>__bool__</code> — truth testing</li><li><code>__len__</code> — length</li><li><code>__getitem__</code> — indexing/slicing</li><li><code>__setitem__</code> — indexed assignment</li><li><code>__delitem__</code> — indexed deletion</li><li><code>__contains__</code> — membership</li><li><code>__iter__</code> — iteration</li><li><code>__next__</code> — next iterator value</li><li><code>__reversed__</code> — reverse iteration</li><li><code>__call__</code> — callable object</li><li><code>__enter__</code>/<code>__exit__</code> — context manager</li><li><code>__getattribute__</code> — every attribute read</li><li><code>__getattr__</code> — missing attribute fallback</li><li><code>__setattr__</code> — attribute assignment</li><li><code>__delattr__</code> — attribute deletion</li><li><code>__dir__</code> — <code>dir()</code> customization</li><li><code>__get__</code>/<code>__set__</code>/<code>__delete__</code> — descriptors</li><li><code>__set_name__</code> — descriptor learns its class attribute name</li><li><code>__eq__</code>/<code>__ne__</code> — equality</li><li><code>__lt__</code>/<code>__le__</code>/<code>__gt__</code>/<code>__ge__</code> — ordering</li><li><code>__hash__</code> — hashing</li><li><code>__add__</code>/<code>__sub__</code>/<code>__mul__</code> — arithmetic</li><li><code>__truediv__</code>/<code>__floordiv__</code>/<code>__mod__</code> — division protocols</li><li><code>__pow__</code> — exponentiation</li><li><code>__neg__</code>/<code>__pos__</code>/<code>__abs__</code> — unary operations</li><li><code>__and__</code>/<code>__or__</code>/<code>__xor__</code> — bitwise operations</li><li><code>__lshift__</code>/<code>__rshift__</code> — shifts</li><li><code>__matmul__</code> — matrix multiplication</li><li><code>__missing__</code> — missing key fallback for dict subclasses</li><li><code>__index__</code> — integer-index protocol</li><li><code>__await__</code> — awaitable protocol</li><li><code>__aiter__</code>/<code>__anext__</code> — async iteration</li><li><code>__aenter__</code>/<code>__aexit__</code> — async context manager</li></ul><div class="callout"><strong>Best study order:</strong> learn <code>__init__</code> → representation → comparison/operators → containers → iteration → context managers → attribute trapping → descriptors → decorators → metaclasses. Attribute trapping and descriptors explain a large amount of the “magic” behind Python OOP.</div><a class="back" href="python_oops_quiz.html">← Return to the Python PRA Quiz</a></section>
+# Creating class: User</pre><p>The metaclass receives the class name, base classes, and namespace while the class object is being created.</p><div class="callout warning"><strong>Do not jump to metaclasses too early.</strong> Most problems that look like they need a metaclass can be solved with a normal class, descriptor, decorator, or <code>__init_subclass__</code>.</div><h3><code>__init_subclass__</code> — often the simpler alternative</h3><pre class="code">class Plugin:
+    registry = []
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        Plugin.registry.append(cls.__name__)
+
+class AudioPlugin(Plugin):
+    pass
+
+class VideoPlugin(Plugin):
+    pass
+
+print(Plugin.registry)
+# ['AudioPlugin', 'VideoPlugin']</pre><p><code>__init_subclass__</code> lets a base class react whenever a subclass is created without introducing a custom metaclass.</p></section>
+
+<section class="section" id="cheat"><h2>16. Dunder method reference</h2><p>This section is the reference sheet. Learn the concepts above first; use this table for revision.</p><table><tr><th>Category</th><th>Important methods</th><th>Triggered by</th></tr><tr><td>Creation</td><td><code>__new__</code>, <code>__init__</code>, <code>__del__</code></td><td>object construction/finalization</td></tr><tr><td>String/format</td><td><code>__str__</code>, <code>__repr__</code>, <code>__format__</code>, <code>__bytes__</code></td><td><code>str</code>, <code>repr</code>, formatting, <code>bytes</code></td></tr><tr><td>Truth/size</td><td><code>__bool__</code>, <code>__len__</code></td><td><code>bool(x)</code>, <code>len(x)</code>, truth tests</td></tr><tr><td>Comparison</td><td><code>__eq__</code>, <code>__ne__</code>, <code>__lt__</code>, <code>__le__</code>, <code>__gt__</code>, <code>__ge__</code></td><td>comparison operators</td></tr><tr><td>Hashing</td><td><code>__hash__</code></td><td><code>hash(x)</code>, sets, dict keys</td></tr><tr><td>Arithmetic</td><td><code>__add__</code>, <code>__sub__</code>, <code>__mul__</code>, <code>__truediv__</code>, <code>__floordiv__</code>, <code>__mod__</code>, <code>__pow__</code></td><td>numeric operators</td></tr><tr><td>Reflected arithmetic</td><td><code>__radd__</code>, <code>__rsub__</code>, <code>__rmul__</code>, <code>__rtruediv__</code>, etc.</td><td>right-hand operand fallback</td></tr><tr><td>In-place arithmetic</td><td><code>__iadd__</code>, <code>__isub__</code>, <code>__imul__</code>, etc.</td><td><code>+=</code>, <code>-=</code>, <code>*=</code>, etc.</td></tr><tr><td>Unary</td><td><code>__neg__</code>, <code>__pos__</code>, <code>__abs__</code>, <code>__invert__</code></td><td><code>-x</code>, <code>+x</code>, <code>abs(x)</code>, <code>~x</code></td></tr><tr><td>Bitwise</td><td><code>__and__</code>, <code>__or__</code>, <code>__xor__</code>, <code>__lshift__</code>, <code>__rshift__</code></td><td>bitwise operators</td></tr><tr><td>Matrix</td><td><code>__matmul__</code>, <code>__rmatmul__</code>, <code>__imatmul__</code></td><td><code>@</code></td></tr><tr><td>Container</td><td><code>__getitem__</code>, <code>__setitem__</code>, <code>__delitem__</code>, <code>__contains__</code></td><td><code>[]</code>, <code>in</code>, <code>del</code></td></tr><tr><td>Iteration</td><td><code>__iter__</code>, <code>__next__</code>, <code>__reversed__</code></td><td><code>for</code>, <code>next</code>, <code>reversed</code></td></tr><tr><td>Callable</td><td><code>__call__</code></td><td><code>x()</code></td></tr><tr><td>Context</td><td><code>__enter__</code>, <code>__exit__</code></td><td><code>with</code></td></tr><tr><td>Async context</td><td><code>__aenter__</code>, <code>__aexit__</code></td><td><code>async with</code></td></tr><tr><td>Async iteration</td><td><code>__aiter__</code>, <code>__anext__</code></td><td><code>async for</code></td></tr><tr><td>Attributes</td><td><code>__getattribute__</code>, <code>__getattr__</code>, <code>__setattr__</code>, <code>__delattr__</code>, <code>__dir__</code></td><td>attribute access/assignment/deletion/introspection</td></tr><tr><td>Descriptors</td><td><code>__get__</code>, <code>__set__</code>, <code>__delete__</code>, <code>__set_name__</code></td><td>descriptor-controlled attributes</td></tr><tr><td>Class creation</td><td><code>__init_subclass__</code>, <code>__class_getitem__</code></td><td>subclass creation and class subscription</td></tr><tr><td>Pickling</td><td><code>__getstate__</code>, <code>__setstate__</code>, <code>__reduce__</code>, <code>__reduce_ex__</code></td><td>serialization hooks</td></tr><tr><td>Copying</td><td><code>__copy__</code>, <code>__deepcopy__</code></td><td><code>copy.copy</code>, <code>copy.deepcopy</code></td></tr><tr><td>Memory/size</td><td><code>__sizeof__</code></td><td><code>sys.getsizeof</code></td></tr></table><h3>Important note about “all dunder methods”</h3><p>Python has a large data model, and some hooks are specialized for things such as numeric conversion, pickling, async protocols, weak references, and pattern matching. The table covers the important protocol families and the methods you are most likely to encounter in normal Python OOP and PRA questions. It is better to understand each family than to memorize an enormous alphabetized list without context.</p></section>
+
+<section class="section" id="practice"><h2>17. Practice the concepts instead of memorizing them</h2><h3>Trap 1: <code>__getattribute__</code> versus <code>__getattr__</code></h3><pre class="code">class Demo:
+    def __getattribute__(self, name):
+        print("GET", name)
+        return object.__getattribute__(self, name)
+
+    def __getattr__(self, name):
+        print("MISSING", name)
+        return 99
+
+x = Demo()
+print(x.answer)</pre><p>Ask yourself: which hook runs first? Answer: <code>__getattribute__</code>. Only after normal lookup fails can <code>__getattr__</code> supply the fallback.</p><h3>Trap 2: class attribute versus instance attribute</h3><pre class="code">class User:
+    role = "viewer"
+
+u = User()
+u.role = "admin"
+
+print(User.role)
+print(u.role)
+# viewer
+# admin</pre><p>The assignment creates an instance attribute that shadows the class attribute for that instance. It does not change <code>User.role</code>.</p><h3>Trap 3: method binding</h3><pre class="code">class A:
+    def show(self):
+        return "A"
+
+a = A()
+print(a.show())
+print(A.show(a))
+# A
+# A</pre><p>These are two views of the same underlying function: one obtains a bound method from the instance; the other passes the instance explicitly.</p><h3>Trap 4: cooperative multiple inheritance</h3><pre class="code">class A:
+    def f(self):
+        return ["A"]
+
+class B(A):
+    def f(self):
+        return super().f() + ["B"]
+
+class C(A):
+    def f(self):
+        return super().f() + ["C"]
+
+class D(B, C):
+    def f(self):
+        return super().f() + ["D"]
+
+print(D().f())
+# ['A', 'C', 'B', 'D']</pre><p>Do not interpret <code>super()</code> as “call my parent”. It means “continue lookup after this class in the method-resolution order”. For <code>D</code>, the relevant chain is <code>D → B → C → A</code>.</p><h3>Trap 5: decorator order</h3><pre class="code">def first(cls):
+    cls.value = cls.value + 1
+    return cls
+
+def second(cls):
+    cls.value = cls.value * 2
+    return cls
+
+@first
+@second
+class Demo:
+    value = 3
+
+print(Demo.value)
+# 7</pre><p>First <code>second</code> changes 3 to 6. Then <code>first</code> changes 6 to 7.</p><div class="callout"><strong>Recommended learning order:</strong> dunder basics → lifecycle → representation → operators → containers → iteration → callable/context protocols → attribute trapping → descriptors → decorators → metaclasses. This order builds the machinery gradually instead of throwing all of Python's internals at you at once.</div></section>
 </div></div>
 </main>
 </body>
